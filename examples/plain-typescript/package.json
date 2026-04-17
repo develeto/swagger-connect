@@ -1,0 +1,21 @@
+{
+  "name": "@swagger-connect-examples/plain-typescript",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Plain TypeScript example — no framework, generates openapi.json via a script",
+  "type": "module",
+  "scripts": {
+    "generate": "tsx scripts/generate.ts",
+    "validate": "tsx scripts/validate.ts"
+  },
+  "dependencies": {
+    "@swagger-connect/core": "workspace:*",
+    "@swagger-connect/zod-adapter": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "^10.1.0",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4"
+  }
+}
