@@ -1,0 +1,54 @@
+{
+  "name": "swagger-connect-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:coverage": "turbo run test:coverage",
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check:circular": "madge --circular packages/",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "turbo run build && changeset publish",
+    "size": "size-limit",
+    "size:ci": "size-limit --json"
+  },
+  "size-limit": [
+    {
+      "name": "@swagger-connect/core",
+      "path": "packages/core/dist/index.js",
+      "limit": "10 kB",
+      "gzip": true
+    },
+    {
+      "name": "@swagger-connect/zod-adapter",
+      "path": "packages/zod-adapter/dist/index.js",
+      "limit": "5 kB",
+      "gzip": true
+    }
+  ],
+  "devDependencies": {
+    "@changesets/cli": "^2.27.7",
+    "@size-limit/file": "^11.0.0",
+    "size-limit": "^11.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-import-x": "^4.0.0",
+    "madge": "^8.0.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.1.2",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "pnpm@9.9.0"
+}
