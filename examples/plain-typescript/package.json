@@ -1,6 +1,6 @@
 {
   "name": "@swagger-connect-examples/plain-typescript",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Plain TypeScript example — no framework, generates openapi.json via a script",
   "type": "module",

@@ -1,5 +1,11 @@
 # @swagger-connect/core
 
+## 0.1.1
+
+### Patch Changes
+
+- Fix import ordering, Prettier formatting, and coverage thresholds. Add tests for adapter edge cases including schema descriptions, unsupported types, and additional OpenAPI properties.
+
 ## 0.1.0
 
 ### Minor Changes
