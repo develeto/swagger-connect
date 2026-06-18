@@ -124,4 +124,90 @@ describe('YupSchemaAdapter', () => {
     const result = adapter.convert(yup.string().uuid());
     expect(result.format).toBe('uuid');
   });
+
+  it('converts yup.string().length(10)', () => {
+    const result = adapter.convert(yup.string().length(10));
+    expect(result.minLength).toBe(10);
+    expect(result.maxLength).toBe(10);
+  });
+
+  it('converts yup.string().matches(/[a-z]+/)', () => {
+    const result = adapter.convert(yup.string().matches(/[a-z]+/));
+    expect(result.pattern).toBeDefined();
+  });
+
+  it('converts yup.string().oneOf(["a","b"])', () => {
+    const result = adapter.convert(yup.string().oneOf(['a', 'b']));
+    expect(result.enum).toEqual(['a', 'b']);
+  });
+
+  it('converts yup.string().datetime()', () => {
+    const result = adapter.convert(yup.string().datetime());
+    expect(result.format).toBe('date-time');
+  });
+
+  it('converts yup.number().negative()', () => {
+    const result = adapter.convert(yup.number().negative());
+    expect(result.exclusiveMaximum).toBe(true);
+    expect(result.maximum).toBe(0);
+  });
+
+  it('converts yup.number().round("floor") does not produce integer type', () => {
+    const result = adapter.convert(yup.number().round('floor'));
+    // round adds a transform, not a type override
+    expect(result.type).toBe('number');
+  });
+
+  it('converts yup.number() with custom round test produces integer type', () => {
+    const schema = yup.number().test('round', 'must be integer', () => true);
+    const result = adapter.convert(schema);
+    expect(result.type).toBe('integer');
+  });
+
+  it('converts schema with description', () => {
+    const schema = {
+      describe: () => ({ type: 'string', description: 'a field' }),
+    };
+    const result = adapter.convert(schema);
+    expect(result.type).toBe('string');
+    expect(result.description).toBe('a field');
+  });
+
+  it('converts yup.number().oneOf([1,2])', () => {
+    const result = adapter.convert(yup.number().oneOf([1, 2]));
+    expect(result.enum).toEqual([1, 2]);
+  });
+
+  it('converts yup.array().of(yup.string()).length(5)', () => {
+    const result = adapter.convert(yup.array().of(yup.string()).length(5));
+    expect(result.minItems).toBe(5);
+    expect(result.maxItems).toBe(5);
+  });
+
+  it('converts yup.object() with no fields', () => {
+    const result = adapter.convert(yup.object({}));
+    expect(result.type).toBe('object');
+    expect(result.properties).toBeUndefined();
+  });
+
+  it('throws OpenApiAdapterError for lazy() schemas', () => {
+    const lazySchema = yup.lazy(() => yup.string());
+    expect(() => adapter.convert(lazySchema)).toThrow(OpenApiAdapterError);
+  });
+
+  it('throws OpenApiAdapterError for unsupported Yup type', () => {
+    const badSchema = {
+      describe: () => ({ type: 'binary' }),
+    };
+    expect(() => adapter.convert(badSchema)).toThrow(OpenApiAdapterError);
+  });
+
+  it('canHandle returns false when describe throws', () => {
+    const bad = {
+      describe: () => {
+        throw new Error('fail');
+      },
+    };
+    expect(adapter.canHandle(bad)).toBe(false);
+  });
 });
