@@ -1,4 +1,4 @@
-import { Type } from '@sinclair/typebox';
+import { Kind, Type } from '@sinclair/typebox';
 import { OpenApiAdapterError } from '@swagger-connect/core';
 import { describe, it, expect } from 'vitest';
 
@@ -128,6 +128,13 @@ describe('TypeBoxSchemaAdapter', () => {
     expect(Object.getOwnPropertySymbols(result).length).toBe(0);
   });
 
+  it('strips non-OpenAPI keys from schema', () => {
+    const schema = Type.Unsafe({ type: 'string', 'x-internal': true });
+    const result = adapter.convert(schema);
+    expect(result).toEqual({ type: 'string' });
+    expect((result as Record<string, unknown>)['x-internal']).toBeUndefined();
+  });
+
   it('converts Type.Null()', () => {
     const result = adapter.convert(Type.Null());
     expect(result).toEqual({ type: 'null' });
@@ -142,6 +149,32 @@ describe('TypeBoxSchemaAdapter', () => {
     const result = adapter.convert(Type.Enum({ A: 'a', B: 'b' }));
     expect(result.anyOf).toBeDefined();
     expect(result.anyOf).toHaveLength(2);
+  });
+
+  it('converts schema with additionalProperties', () => {
+    const schema = Type.Unsafe({
+      type: 'object',
+      additionalProperties: { type: 'number' },
+    });
+    const result = adapter.convert(schema);
+    expect(result.type).toBe('object');
+    expect(result.additionalProperties).toEqual({ type: 'number' });
+  });
+
+  it('handles TypeBox Not schema', () => {
+    const schema = Type.Unsafe({ not: { type: 'string' } });
+    const result = adapter.convert(schema);
+    expect(result.not).toEqual({ type: 'string' });
+  });
+
+  it('throws OpenApiAdapterError when convert fails', () => {
+    const badSchema = {
+      [Kind]: 'Object',
+      get schema() {
+        throw new Error('corrupt');
+      },
+    };
+    expect(() => adapter.convert(badSchema)).toThrow(OpenApiAdapterError);
   });
 
   it('converts Type.Record()', () => {
