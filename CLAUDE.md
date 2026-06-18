@@ -58,9 +58,21 @@ The core data flow is a pipeline of four collaborating classes:
 
 Wraps `zod-to-json-schema` with `target: 'openApi3'` and `$refStrategy: 'none'`, then strips non-OpenAPI JSON Schema keys via an allowlist in `normalize()`. Depends on `@swagger-connect/core` as a workspace peer.
 
+### Package: `@swagger-connect/joi-adapter`
+
+Uses Joi's `describe()` API (no `joi-to-json` dependency) to extract schema metadata. Converts Joi types: `string`, `number`, `boolean`, `object`, `array`, `alternatives`, `date`, `any`. Handles rules like `min`/`max`, `email`, `uri`, `uuid`, `integer`, and `allow(null)` for nullable.
+
+### Package: `@swagger-connect/yup-adapter`
+
+Uses Yup's `schema.describe()` API. Converts Yup types: `string`, `number`, `boolean`, `object`, `array`, `mixed`, `date`. Throws `OpenApiAdapterError` on `lazy()` schemas. Handles tests like `min`/`max`, `email`, `url`, `uuid`, `integer`, `matches`.
+
+### Package: `@swagger-connect/typebox-adapter`
+
+Normalizes TypeBox's native JSON Schema output, stripping TypeBox-internal symbol properties. Since TypeBox already produces JSON Schema directly, this adapter is primarily a normalization layer with an allowlist filter.
+
 ### Build output
 
-Both packages output ESM (`dist/index.js`) and CJS (`dist/index.cjs`) via `tsup`. Size limits enforced in CI: `core ≤ 10 kB`, `zod-adapter ≤ 5 kB` (gzip).
+All packages output ESM (`dist/index.js`) and CJS (`dist/index.cjs`) via `tsup`. Size limits enforced in CI: `core ≤ 10 kB`, each adapter ≤ 5 kB (gzip).
 
 ## Conventions
 

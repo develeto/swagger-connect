@@ -1,7 +1,7 @@
 {
-  "name": "@swagger-connect/zod-adapter",
+  "name": "@swagger-connect/joi-adapter",
   "version": "0.1.0",
-  "description": "Zod schema adapter for swagger-connect",
+  "description": "Joi schema adapter for swagger-connect",
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -31,23 +31,23 @@
     "clean": "rm -rf dist coverage"
   },
   "dependencies": {
-    "@swagger-connect/core": "workspace:*",
-    "zod-to-json-schema": "^3.23.2"
+    "@swagger-connect/core": "workspace:*"
   },
   "peerDependencies": {
-    "zod": ">=3.0.0"
+    "joi": ">=17.0.0"
   },
   "peerDependenciesMeta": {
-    "zod": {
+    "joi": {
       "optional": false
     }
   },
   "devDependencies": {
+    "@swagger-connect/core": "workspace:*",
     "@vitest/coverage-v8": "^2.0.5",
+    "joi": "^17.13.0",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4",
-    "vitest": "^2.0.5",
-    "zod": "^3.23.8"
+    "vitest": "^2.0.5"
   },
   "publishConfig": {
     "access": "public"

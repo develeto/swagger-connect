@@ -211,4 +211,151 @@ describe('assembleSpec', () => {
     expect(doc.tags).toBeUndefined();
     expect(doc.servers).toBeUndefined();
   });
+
+  describe('components.schemas extraction', () => {
+    it('extracts a schema with title into components.schemas and uses $ref', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'POST',
+          path: '/users',
+          requestBody: { type: 'object', title: 'CreateUser', properties: { name: { type: 'string' } } },
+          responses: { 201: { type: 'object', title: 'User', properties: { id: { type: 'string' } } } },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(doc.components?.schemas?.['User']).toEqual({
+        type: 'object',
+        properties: { id: { type: 'string' } },
+      });
+      expect(doc.components?.schemas?.['CreateUser']).toEqual({
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      });
+      expect(doc.paths['/users']?.post?.requestBody?.content['application/json']?.schema?.$ref).toBe(
+        '#/components/schemas/CreateUser',
+      );
+      expect(doc.paths['/users']?.post?.responses['201']?.content?.['application/json']?.schema?.$ref).toBe(
+        '#/components/schemas/User',
+      );
+    });
+
+    it('deduplicates schemas with the same title (first occurrence wins)', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'POST',
+          path: '/users',
+          requestBody: { type: 'object', title: 'User', properties: { name: { type: 'string' } } },
+          responses: { 201: { type: 'object', title: 'User', properties: { id: { type: 'string' } } } },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(Object.keys(doc.components?.schemas ?? {})).toHaveLength(1);
+      // First occurrence (requestBody) is kept
+      expect(doc.components?.schemas?.['User']).toEqual({
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      });
+      // Both occurrences are replaced by $ref
+      expect(doc.paths['/users']?.post?.requestBody?.content['application/json']?.schema?.$ref).toBe(
+        '#/components/schemas/User',
+      );
+      expect(doc.paths['/users']?.post?.responses['201']?.content?.['application/json']?.schema?.$ref).toBe(
+        '#/components/schemas/User',
+      );
+    });
+
+    it('extracts nested schemas from properties, items, allOf', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'POST',
+          path: '/items',
+          requestBody: {
+            type: 'object',
+            properties: {
+              nested: { type: 'object', title: 'Nested', properties: { val: { type: 'string' } } },
+            },
+          },
+          responses: { 200: { type: 'object', allOf: [{ type: 'object', title: 'Mixin', properties: { x: { type: 'number' } } }] } },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(doc.components?.schemas?.['Nested']).toBeDefined();
+      expect(doc.components?.schemas?.['Mixin']).toBeDefined();
+    });
+
+    it('does not extract schemas without title', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'GET',
+          path: '/items',
+          responses: { 200: { type: 'array', items: { type: 'string' } } },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(doc.components?.schemas).toBeUndefined();
+    });
+
+    it('preserves existing components when merging schemas', () => {
+      const doc = assembleSpec(
+        [
+          {
+            method: 'GET',
+            path: '/items',
+            responses: { 200: { type: 'object', title: 'Item', properties: { id: { type: 'string' } } } },
+          },
+        ],
+        converter,
+        { info: baseInfo, securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer' } } },
+      );
+      expect(doc.components?.securitySchemes?.['bearerAuth']).toBeDefined();
+      expect(doc.components?.schemas?.['Item']).toBeDefined();
+    });
+
+    it('extracts schema from path parameters', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'GET',
+          path: '/users/{id}',
+          pathParams: {
+            type: 'object',
+            properties: { id: { type: 'string', title: 'UserId' } },
+          },
+          responses: { 200: {} },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(doc.components?.schemas?.['UserId']).toBeDefined();
+    });
+
+    it('extracts schema from query parameters', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'GET',
+          path: '/search',
+          queryParams: {
+            type: 'object',
+            properties: { q: { type: 'string', title: 'SearchQuery' } },
+          },
+          responses: { 200: {} },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(doc.components?.schemas?.['SearchQuery']).toBeDefined();
+    });
+
+    it('skips schemas that already have a $ref', () => {
+      const routes: RouteDefinition[] = [
+        {
+          method: 'GET',
+          path: '/ref-test',
+          responses: { 200: { $ref: '#/components/schemas/Existing' } },
+        },
+      ];
+      const doc = assembleSpec(routes, converter, { info: baseInfo });
+      expect(doc.components?.schemas).toBeUndefined();
+      expect(doc.paths['/ref-test']?.get?.responses['200']?.content?.['application/json']?.schema?.$ref).toBe(
+        '#/components/schemas/Existing',
+      );
+    });
+  });
 });

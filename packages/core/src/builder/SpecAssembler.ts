@@ -4,6 +4,7 @@ import type { SchemaConverter } from './SchemaConverter.js';
 import type {
   ComponentsObject,
   InfoObject,
+  MediaTypeObject,
   OpenApiDocument,
   OperationObject,
   ParameterObject,
@@ -127,6 +128,102 @@ function getDefaultDescription(status: number): string {
   return descriptions[status] ?? 'Response';
 }
 
+/**
+ * Walks the assembled document and extracts schemas with a `title` into
+ * `components.schemas`, replacing inline occurrences with `$ref` pointers.
+ *
+ * This enables adapters to produce named schemas that are automatically
+ * deduplicated and referenced throughout the document.
+ */
+function extractNamedComponents(doc: OpenApiDocument): void {
+  const schemas: Record<string, SchemaObject> = {};
+
+  function extract(schema: SchemaObject): void {
+    if (!schema || schema.$ref !== undefined) return;
+
+    if (schema.title !== undefined) {
+      const name = schema.title;
+      if (!schemas[name]) {
+        const { title: _t, ...rest } = schema;
+        schemas[name] = rest;
+      }
+      // Replace with $ref
+      for (const key of Object.keys(schema)) {
+        delete (schema as Record<string, unknown>)[key];
+      }
+      schema.$ref = `#/components/schemas/${name}`;
+      return;
+    }
+
+    // Recurse into composition and container fields
+    if (schema.properties !== undefined) {
+      for (const prop of Object.values(schema.properties)) {
+        extract(prop);
+      }
+    }
+    if (schema.items !== undefined) {
+      extract(schema.items);
+    }
+    if (schema.additionalProperties !== undefined && typeof schema.additionalProperties === 'object') {
+      extract(schema.additionalProperties);
+    }
+    for (const key of ['allOf', 'anyOf', 'oneOf'] as const) {
+      const arr = schema[key];
+      if (arr !== undefined) {
+        for (const item of arr) {
+          extract(item);
+        }
+      }
+    }
+    if (schema.not !== undefined) {
+      extract(schema.not);
+    }
+  }
+
+  function extractMedia(media: MediaTypeObject): void {
+    if (media.schema !== undefined) {
+      extract(media.schema);
+    }
+  }
+
+  for (const pathItem of Object.values(doc.paths)) {
+    for (const method of ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'] as const) {
+      const op = (pathItem as Record<string, unknown>)[method] as OperationObject | undefined;
+      if (op === undefined) continue;
+
+      if (op.parameters !== undefined) {
+        for (const param of op.parameters) {
+          if (param.schema !== undefined) extract(param.schema);
+        }
+      }
+
+      if (op.requestBody !== undefined) {
+        for (const media of Object.values(op.requestBody.content)) {
+          extractMedia(media);
+        }
+      }
+
+      for (const response of Object.values(op.responses)) {
+        if (response.content !== undefined) {
+          for (const media of Object.values(response.content)) {
+            extractMedia(media);
+          }
+        }
+      }
+    }
+  }
+
+  if (Object.keys(schemas).length > 0) {
+    if (doc.components === undefined) {
+      doc.components = {};
+    }
+    doc.components.schemas = {
+      ...doc.components.schemas,
+      ...schemas,
+    };
+  }
+}
+
 export function assembleSpec(
   routes: ReadonlyArray<RouteDefinition>,
   converter: SchemaConverter,
@@ -175,6 +272,9 @@ export function assembleSpec(
     ...(options.security !== undefined && { security: options.security }),
     ...(Object.keys(components).length > 0 && { components }),
   };
+
+  // Post-process: extract named schemas to components.schemas
+  extractNamedComponents(doc);
 
   return doc;
 }

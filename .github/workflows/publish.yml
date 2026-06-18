@@ -12,6 +12,7 @@ jobs:
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
+    environment: npm
     if: "contains(github.event.head_commit.message, 'chore: release')"
 
     steps:

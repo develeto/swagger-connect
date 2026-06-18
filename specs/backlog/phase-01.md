@@ -9,11 +9,11 @@
 ## Estado general
 
 | Métrica | Valor |
-|---|---|
+|---|---|---|
 | Total tareas | 57 |
-| Completadas | 56 |
+| Completadas | 57 |
 | En progreso | 0 |
-| Pendientes | 1 |
+| Pendientes | 0 |
 
 ---
 
@@ -79,7 +79,7 @@
 
 - [x] **C-25** Implementar función pura `assembleSpec(registry, converter, options): OpenApiDocument`
 - [x] **C-26** Generar `paths` a partir de las rutas registradas
-- [ ] **C-27** Generar `components.schemas` deduplicando schemas con nombre (si el adaptador los provee)
+- [x] **C-27** Generar `components.schemas` deduplicando schemas con nombre (si el adaptador los provee)
 - [x] **C-28** Incluir `info`, `servers`, `tags` desde las opciones del builder
 
 ### 2.8 `DocBuilder`

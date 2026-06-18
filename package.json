@@ -35,6 +35,24 @@
       "path": "packages/zod-adapter/dist/index.js",
       "limit": "5 kB",
       "gzip": true
+    },
+    {
+      "name": "@swagger-connect/joi-adapter",
+      "path": "packages/joi-adapter/dist/index.js",
+      "limit": "5 kB",
+      "gzip": true
+    },
+    {
+      "name": "@swagger-connect/yup-adapter",
+      "path": "packages/yup-adapter/dist/index.js",
+      "limit": "5 kB",
+      "gzip": true
+    },
+    {
+      "name": "@swagger-connect/typebox-adapter",
+      "path": "packages/typebox-adapter/dist/index.js",
+      "limit": "5 kB",
+      "gzip": true
     }
   ],
   "devDependencies": {

@@ -9,58 +9,58 @@
 ## Estado general
 
 | Métrica | Valor |
-|---|---|
+|---|---|---|
 | Total tareas | 24 |
-| Completadas | 0 |
+| Completadas | 17 |
 | En progreso | 0 |
-| Pendientes | 24 |
+| Pendientes | 7 |
 
 ---
 
 ## 1. Paquete `@swagger-connect/joi-adapter`
 
-- [ ] **J-01** Crear `packages/joi-adapter/package.json` con `peerDependency: joi >=17.0.0` y `dependency: joi-to-json`
-- [ ] **J-02** Crear `packages/joi-adapter/tsconfig.json` y configurar `tsup`
-- [ ] **J-03** Implementar `JoiSchemaAdapter` que implementa `ISchemaAdapter`
-  - [ ] **J-03a** `canHandle`: detecta schemas Joi (`schema.isJoi === true` o `schema.schemaType`)
-  - [ ] **J-03b** `convert`: usa `joi-to-json` con formato `'json-draft-07'` y normaliza a `SchemaObject`
-  - [ ] **J-03c** Soportar: string, number, boolean, object, array, alternatives (union), any, date
-  - [ ] **J-03d** Lanzar `OpenApiAdapterError` para tipos no soportados
-- [ ] **J-04** Exportar `JoiSchemaAdapter` desde `index.ts`
-- [ ] **T-J-01** Tests unitarios: cada tipo Joi soportado → SchemaObject correcto
-- [ ] **T-J-02** Tests: errores esperados para tipos no soportados
-- [ ] **T-J-03** Cobertura ≥ 85%
+- [x] **J-01** Crear `packages/joi-adapter/package.json` con `peerDependency: joi >=17.0.0` (usa `describe()` API en lugar de `joi-to-json`)
+- [x] **J-02** Crear `packages/joi-adapter/tsconfig.json` y configurar `tsup`
+- [x] **J-03** Implementar `JoiSchemaAdapter` que implementa `ISchemaAdapter`
+  - [x] **J-03a** `canHandle`: detecta schemas Joi por `describe()` method + tipo
+  - [x] **J-03b** `convert`: usa Joi `describe()` API y mapea a `SchemaObject`
+  - [x] **J-03c** Soportar: string, number, boolean, object, array, alternatives (union), any, date
+  - [x] **J-03d** Lanzar `OpenApiAdapterError` para tipos no soportados
+- [x] **J-04** Exportar `JoiSchemaAdapter` desde `index.ts`
+- [x] **T-J-01** Tests unitarios: cada tipo Joi soportado → SchemaObject correcto
+- [x] **T-J-02** Tests: errores esperados para tipos no soportados
+- [x] **T-J-03** Cobertura ≥ 85%
 
 ---
 
 ## 2. Paquete `@swagger-connect/yup-adapter`
 
-- [ ] **Y-01** Crear `packages/yup-adapter/package.json` con `peerDependency: yup >=1.0.0`
-- [ ] **Y-02** Crear `packages/yup-adapter/tsconfig.json` y configurar `tsup`
-- [ ] **Y-03** Implementar `YupSchemaAdapter` que implementa `ISchemaAdapter`
-  - [ ] **Y-03a** `canHandle`: detecta schemas Yup por `__isYupSchema__` o `describe()`
-  - [ ] **Y-03b** `convert`: usa la API `schema.describe()` de Yup para obtener la descripción y la convierte a `SchemaObject`
-  - [ ] **Y-03c** Soportar: string, number, boolean, object, array, mixed, date, lazy (sin soporte, error explícito)
-  - [ ] **Y-03d** Lanzar `OpenApiAdapterError` para tipos no soportados o `lazy`
-- [ ] **Y-04** Exportar `YupSchemaAdapter` desde `index.ts`
-- [ ] **T-Y-01** Tests unitarios: cada tipo Yup soportado → SchemaObject correcto
-- [ ] **T-Y-02** Tests: errores esperados
-- [ ] **T-Y-03** Cobertura ≥ 85%
+- [x] **Y-01** Crear `packages/yup-adapter/package.json` con `peerDependency: yup >=1.0.0`
+- [x] **Y-02** Crear `packages/yup-adapter/tsconfig.json` y configurar `tsup`
+- [x] **Y-03** Implementar `YupSchemaAdapter` que implementa `ISchemaAdapter`
+  - [x] **Y-03a** `canHandle`: detecta schemas Yup por método `describe()` + tipo
+  - [x] **Y-03b** `convert`: usa la API `schema.describe()` de Yup y mapea a `SchemaObject`
+  - [x] **Y-03c** Soportar: string, number, boolean, object, array, mixed, date, lazy (error explícito)
+  - [x] **Y-03d** Lanzar `OpenApiAdapterError` para tipos no soportados o `lazy`
+- [x] **Y-04** Exportar `YupSchemaAdapter` desde `index.ts`
+- [x] **T-Y-01** Tests unitarios: cada tipo Yup soportado → SchemaObject correcto
+- [x] **T-Y-02** Tests: errores esperados
+- [x] **T-Y-03** Cobertura ≥ 85%
 
 ---
 
 ## 3. Paquete `@swagger-connect/typebox-adapter`
 
-- [ ] **TB-01** Crear `packages/typebox-adapter/package.json` con `peerDependency: @sinclair/typebox >=0.31.0`
-- [ ] **TB-02** Crear `packages/typebox-adapter/tsconfig.json` y configurar `tsup`
-- [ ] **TB-03** Implementar `TypeBoxSchemaAdapter` que implementa `ISchemaAdapter`
-  - [ ] **TB-03a** `canHandle`: detecta schemas TypeBox por símbolo `Kind` de TypeBox (`schema[Symbol.for('TypeBox.Kind')]`)
-  - [ ] **TB-03b** `convert`: TypeBox ya produce JSON Schema — normalizar y filtrar propiedades TypeBox-internas (`$schema`, `[Symbol]`) antes de retornar el `SchemaObject`
-  - [ ] **TB-03c** Soportar el subset completo de TypeBox (es prácticamente JSON Schema nativo)
-- [ ] **TB-04** Exportar `TypeBoxSchemaAdapter` desde `index.ts`
-- [ ] **T-TB-01** Tests: schemas TypeBox representativos → SchemaObject correcto
-- [ ] **T-TB-02** Tests: propiedades internas de TypeBox eliminadas del output
-- [ ] **T-TB-03** Cobertura ≥ 85%
+- [x] **TB-01** Crear `packages/typebox-adapter/package.json` con `peerDependency: @sinclair/typebox >=0.31.0`
+- [x] **TB-02** Crear `packages/typebox-adapter/tsconfig.json` y configurar `tsup`
+- [x] **TB-03** Implementar `TypeBoxSchemaAdapter` que implementa `ISchemaAdapter`
+  - [x] **TB-03a** `canHandle`: detecta schemas TypeBox por símbolo `Kind` de TypeBox
+  - [x] **TB-03b** `convert`: normaliza JSON Schema nativo de TypeBox, filtra propiedades internas
+  - [x] **TB-03c** Soportar el subset completo de TypeBox
+- [x] **TB-04** Exportar `TypeBoxSchemaAdapter` desde `index.ts`
+- [x] **T-TB-01** Tests: schemas TypeBox representativos → SchemaObject correcto
+- [x] **T-TB-02** Tests: propiedades internas de TypeBox eliminadas del output
+- [x] **T-TB-03** Cobertura ≥ 85%
 
 ---
 
@@ -75,10 +75,10 @@
 
 ## 5. Documentación de adaptador personalizado
 
-- [ ] **D-01** Crear `docs/custom-adapter.md` con guía paso a paso para implementar `ISchemaAdapter`
-- [ ] **D-02** Incluir ejemplo completo de adaptador ficticio (`MySchemaAdapter`)
-- [ ] **D-03** Documentar los errores que debe lanzar un adaptador y cuándo
-- [ ] **D-04** Añadir sección en `docs/adapters.md` con tabla de adaptadores oficiales y sus peer deps
+- [x] **D-01** Crear `docs/custom-adapter.md` con guía paso a paso para implementar `ISchemaAdapter`
+- [x] **D-02** Incluir ejemplo completo de adaptador ficticio (`MyCustomAdapter`)
+- [x] **D-03** Documentar los errores que debe lanzar un adaptador y cuándo
+- [x] **D-04** Añadir sección en `docs/adapters.md` con tabla de adaptadores oficiales y sus peer deps
 
 ---
 
