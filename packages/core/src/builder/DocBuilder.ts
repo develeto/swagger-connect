@@ -1,9 +1,5 @@
-import { OpenApiValidationError } from '../errors/OpenApiError.js';
 import type { ISchemaAdapter, AnySchema } from '../adapters/ISchemaAdapter.js';
-import { RouteRegistry } from './RouteRegistry.js';
-import type { RouteDefinition } from './RouteRegistry.js';
-import { SchemaConverter } from './SchemaConverter.js';
-import { assembleSpec } from './SpecAssembler.js';
+import { OpenApiValidationError } from '../errors/OpenApiError.js';
 import type {
   InfoObject,
   OpenApiDocument,
@@ -12,6 +8,12 @@ import type {
   ServerObject,
   TagObject,
 } from '../types/openapi.types.js';
+
+import { RouteRegistry } from './RouteRegistry.js';
+import type { RouteDefinition } from './RouteRegistry.js';
+import { SchemaConverter } from './SchemaConverter.js';
+import { assembleSpec } from './SpecAssembler.js';
+
 
 export interface DocBuilderOptions {
   info: InfoObject;

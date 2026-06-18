@@ -67,4 +67,11 @@ export default [
       ],
     },
   },
+  {
+    // tsup, vitest configs need default exports
+    files: ["**/tsup.config.ts", "**/vitest.config.ts"],
+    rules: {
+      "import-x/no-default-export": "off",
+    },
+  },
 ];

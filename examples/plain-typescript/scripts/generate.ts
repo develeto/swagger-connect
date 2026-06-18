@@ -1,8 +1,10 @@
 import { writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { DocBuilder } from '@swagger-connect/core';
 import { ZodSchemaAdapter } from '@swagger-connect/zod-adapter';
+
 import { routes } from '../src/routes.spec.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

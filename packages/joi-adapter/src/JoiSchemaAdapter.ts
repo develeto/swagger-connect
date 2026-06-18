@@ -52,7 +52,7 @@ export class JoiSchemaAdapter implements ISchemaAdapter {
   }
 
   private convertDescription(desc: JoiDescription): SchemaObject {
-    const { type, flags, rules, keys, items, alternatives, matches } = desc;
+    const { type, flags, rules, keys, items, matches } = desc;
 
     let result: SchemaObject = {};
 

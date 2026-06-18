@@ -9,9 +9,8 @@ interface YupDescription {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   tests?: { name: string; params?: Record<string, any> }[];
   fields?: Record<string, YupDescription>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  oneOf?: any[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  oneOf?: unknown[];
+   
   innerType?: YupDescription;
   nullable?: boolean;
 }

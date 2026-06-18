@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { SchemaConverter } from '../src/builder/SchemaConverter.js';
 import { OpenApiAdapterError } from '../src/errors/OpenApiError.js';
 import type { ISchemaAdapter, AnySchema, SchemaObject } from '../src/index.js';

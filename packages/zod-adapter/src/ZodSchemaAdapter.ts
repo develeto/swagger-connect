@@ -1,7 +1,7 @@
-import { zodToJsonSchema } from 'zod-to-json-schema';
-import { ZodType } from 'zod';
 import { OpenApiAdapterError } from '@swagger-connect/core';
 import type { ISchemaAdapter, AnySchema, SchemaObject } from '@swagger-connect/core';
+import { ZodType } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
 
 /**
  * Schema adapter for Zod v3.

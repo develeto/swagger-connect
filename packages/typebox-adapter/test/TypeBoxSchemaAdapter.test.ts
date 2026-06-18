@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest';
 import { Type } from '@sinclair/typebox';
-import { TypeBoxSchemaAdapter } from '../src/TypeBoxSchemaAdapter.js';
 import { OpenApiAdapterError } from '@swagger-connect/core';
+import { describe, it, expect } from 'vitest';
+
+import { TypeBoxSchemaAdapter } from '../src/TypeBoxSchemaAdapter.js';
+
 
 const adapter = new TypeBoxSchemaAdapter();
 

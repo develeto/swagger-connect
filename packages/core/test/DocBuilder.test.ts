@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { DocBuilder } from '../src/builder/DocBuilder.js';
 import { OpenApiValidationError } from '../src/errors/OpenApiError.js';
 import type { ISchemaAdapter, SchemaObject } from '../src/index.js';

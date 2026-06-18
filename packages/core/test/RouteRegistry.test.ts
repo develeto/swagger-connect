@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import { RouteRegistry } from '../src/builder/RouteRegistry.js';
 import { OpenApiValidationError } from '../src/errors/OpenApiError.js';
 

@@ -1,5 +1,5 @@
-import { OpenApiAdapterError } from '../errors/OpenApiError.js';
 import type { ISchemaAdapter, AnySchema } from '../adapters/ISchemaAdapter.js';
+import { OpenApiAdapterError } from '../errors/OpenApiError.js';
 import type { SchemaObject } from '../types/openapi.types.js';
 
 export class SchemaConverter {

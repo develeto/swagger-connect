@@ -1,5 +1,5 @@
-import { z } from 'zod';
 import type { RouteDefinition } from '@swagger-connect/core';
+import { z } from 'zod';
 
 // ── Shared schemas ────────────────────────────────────────────────────────────
 

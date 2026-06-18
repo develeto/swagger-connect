@@ -1,5 +1,5 @@
-import { OpenApiValidationError } from '../errors/OpenApiError.js';
 import type { AnySchema } from '../adapters/ISchemaAdapter.js';
+import { OpenApiValidationError } from '../errors/OpenApiError.js';
 import type { ResponseObject, SecurityRequirementObject } from '../types/openapi.types.js';
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS';

@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { assembleSpec } from '../src/builder/SpecAssembler.js';
+
+import type { RouteDefinition } from '../src/builder/RouteRegistry.js';
 import { SchemaConverter } from '../src/builder/SchemaConverter.js';
+import { assembleSpec } from '../src/builder/SpecAssembler.js';
 import { OpenApiBuildError } from '../src/errors/OpenApiError.js';
 import type { ISchemaAdapter, SchemaObject } from '../src/index.js';
-import type { RouteDefinition } from '../src/builder/RouteRegistry.js';
 const passThrough: ISchemaAdapter = {
   name: 'pass-through',
   canHandle: () => true,

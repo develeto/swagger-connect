@@ -1,7 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import Joi from 'joi';
-import { JoiSchemaAdapter } from '../src/JoiSchemaAdapter.js';
 import { OpenApiAdapterError } from '@swagger-connect/core';
+import Joi from 'joi';
+import { describe, it, expect } from 'vitest';
+
+import { JoiSchemaAdapter } from '../src/JoiSchemaAdapter.js';
+
 
 const adapter = new JoiSchemaAdapter();
 

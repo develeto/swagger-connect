@@ -1,7 +1,8 @@
+import { OpenApiAdapterError } from '@swagger-connect/core';
 import { describe, it, expect } from 'vitest';
 import * as yup from 'yup';
+
 import { YupSchemaAdapter } from '../src/YupSchemaAdapter.js';
-import { OpenApiAdapterError } from '@swagger-connect/core';
 
 const adapter = new YupSchemaAdapter();
 

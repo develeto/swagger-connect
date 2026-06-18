@@ -1,5 +1,6 @@
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import SwaggerParser from '@apidevtools/swagger-parser';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

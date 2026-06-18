@@ -1,6 +1,4 @@
 import { OpenApiBuildError } from '../errors/OpenApiError.js';
-import type { RouteDefinition } from './RouteRegistry.js';
-import type { SchemaConverter } from './SchemaConverter.js';
 import type {
   ComponentsObject,
   InfoObject,
@@ -19,6 +17,9 @@ import type {
   ServerObject,
   TagObject,
 } from '../types/openapi.types.js';
+
+import type { RouteDefinition } from './RouteRegistry.js';
+import type { SchemaConverter } from './SchemaConverter.js';
 
 export interface AssembleOptions {
   info: InfoObject;

@@ -1,7 +1,8 @@
+import { OpenApiAdapterError } from '@swagger-connect/core';
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
+
 import { ZodSchemaAdapter } from '../src/ZodSchemaAdapter.js';
-import { OpenApiAdapterError } from '@swagger-connect/core';
 
 const adapter = new ZodSchemaAdapter();
 
