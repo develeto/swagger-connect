@@ -90,20 +90,13 @@ export class ZodSchemaAdapter implements ISchemaAdapter {
             this.normalize(v as Record<string, unknown>),
           ]),
         );
-      } else if (
-        (key === 'allOf' || key === 'anyOf' || key === 'oneOf') &&
-        Array.isArray(value)
-      ) {
+      } else if ((key === 'allOf' || key === 'anyOf' || key === 'oneOf') && Array.isArray(value)) {
         result[key] = value.map((v) => this.normalize(v as Record<string, unknown>));
       } else if (key === 'items' && typeof value === 'object' && value !== null) {
         result[key] = this.normalize(value as Record<string, unknown>);
       } else if (key === 'not' && typeof value === 'object' && value !== null) {
         result[key] = this.normalize(value as Record<string, unknown>);
-      } else if (
-        key === 'additionalProperties' &&
-        typeof value === 'object' &&
-        value !== null
-      ) {
+      } else if (key === 'additionalProperties' && typeof value === 'object' && value !== null) {
         result[key] = this.normalize(value as Record<string, unknown>);
       } else {
         result[key] = value;

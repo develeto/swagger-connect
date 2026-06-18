@@ -4,7 +4,6 @@ import { describe, it, expect } from 'vitest';
 
 import { TypeBoxSchemaAdapter } from '../src/TypeBoxSchemaAdapter.js';
 
-
 const adapter = new TypeBoxSchemaAdapter();
 
 describe('TypeBoxSchemaAdapter', () => {

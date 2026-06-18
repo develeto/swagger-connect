@@ -24,15 +24,15 @@ describe('assembleSpec', () => {
   });
 
   it('throws when info.title is missing', () => {
-    expect(() =>
-      assembleSpec([], converter, { info: { title: '', version: '1.0.0' } }),
-    ).toThrow(OpenApiBuildError);
+    expect(() => assembleSpec([], converter, { info: { title: '', version: '1.0.0' } })).toThrow(
+      OpenApiBuildError,
+    );
   });
 
   it('throws when info.version is missing', () => {
-    expect(() =>
-      assembleSpec([], converter, { info: { title: 'API', version: '' } }),
-    ).toThrow(OpenApiBuildError);
+    expect(() => assembleSpec([], converter, { info: { title: 'API', version: '' } })).toThrow(
+      OpenApiBuildError,
+    );
   });
 
   it('maps a GET route into paths', () => {
@@ -186,7 +186,9 @@ describe('assembleSpec', () => {
     const routes: RouteDefinition[] = [
       { method: 'GET', path: '/fail', responses: { 200: { type: 'object' } } },
     ];
-    expect(() => assembleSpec(routes, failConverter, { info: baseInfo })).toThrow(OpenApiBuildError);
+    expect(() => assembleSpec(routes, failConverter, { info: baseInfo })).toThrow(
+      OpenApiBuildError,
+    );
   });
 
   it('ignores pathParams when schema is not type object', () => {
@@ -219,8 +221,14 @@ describe('assembleSpec', () => {
         {
           method: 'POST',
           path: '/users',
-          requestBody: { type: 'object', title: 'CreateUser', properties: { name: { type: 'string' } } },
-          responses: { 201: { type: 'object', title: 'User', properties: { id: { type: 'string' } } } },
+          requestBody: {
+            type: 'object',
+            title: 'CreateUser',
+            properties: { name: { type: 'string' } },
+          },
+          responses: {
+            201: { type: 'object', title: 'User', properties: { id: { type: 'string' } } },
+          },
         },
       ];
       const doc = assembleSpec(routes, converter, { info: baseInfo });
@@ -232,12 +240,12 @@ describe('assembleSpec', () => {
         type: 'object',
         properties: { name: { type: 'string' } },
       });
-      expect(doc.paths['/users']?.post?.requestBody?.content['application/json']?.schema?.$ref).toBe(
-        '#/components/schemas/CreateUser',
-      );
-      expect(doc.paths['/users']?.post?.responses['201']?.content?.['application/json']?.schema?.$ref).toBe(
-        '#/components/schemas/User',
-      );
+      expect(
+        doc.paths['/users']?.post?.requestBody?.content['application/json']?.schema?.$ref,
+      ).toBe('#/components/schemas/CreateUser');
+      expect(
+        doc.paths['/users']?.post?.responses['201']?.content?.['application/json']?.schema?.$ref,
+      ).toBe('#/components/schemas/User');
     });
 
     it('deduplicates schemas with the same title (first occurrence wins)', () => {
@@ -246,7 +254,9 @@ describe('assembleSpec', () => {
           method: 'POST',
           path: '/users',
           requestBody: { type: 'object', title: 'User', properties: { name: { type: 'string' } } },
-          responses: { 201: { type: 'object', title: 'User', properties: { id: { type: 'string' } } } },
+          responses: {
+            201: { type: 'object', title: 'User', properties: { id: { type: 'string' } } },
+          },
         },
       ];
       const doc = assembleSpec(routes, converter, { info: baseInfo });
@@ -257,12 +267,12 @@ describe('assembleSpec', () => {
         properties: { name: { type: 'string' } },
       });
       // Both occurrences are replaced by $ref
-      expect(doc.paths['/users']?.post?.requestBody?.content['application/json']?.schema?.$ref).toBe(
-        '#/components/schemas/User',
-      );
-      expect(doc.paths['/users']?.post?.responses['201']?.content?.['application/json']?.schema?.$ref).toBe(
-        '#/components/schemas/User',
-      );
+      expect(
+        doc.paths['/users']?.post?.requestBody?.content['application/json']?.schema?.$ref,
+      ).toBe('#/components/schemas/User');
+      expect(
+        doc.paths['/users']?.post?.responses['201']?.content?.['application/json']?.schema?.$ref,
+      ).toBe('#/components/schemas/User');
     });
 
     it('extracts nested schemas from properties, items, allOf', () => {
@@ -276,7 +286,12 @@ describe('assembleSpec', () => {
               nested: { type: 'object', title: 'Nested', properties: { val: { type: 'string' } } },
             },
           },
-          responses: { 200: { type: 'object', allOf: [{ type: 'object', title: 'Mixin', properties: { x: { type: 'number' } } }] } },
+          responses: {
+            200: {
+              type: 'object',
+              allOf: [{ type: 'object', title: 'Mixin', properties: { x: { type: 'number' } } }],
+            },
+          },
         },
       ];
       const doc = assembleSpec(routes, converter, { info: baseInfo });
@@ -302,7 +317,9 @@ describe('assembleSpec', () => {
           {
             method: 'GET',
             path: '/items',
-            responses: { 200: { type: 'object', title: 'Item', properties: { id: { type: 'string' } } } },
+            responses: {
+              200: { type: 'object', title: 'Item', properties: { id: { type: 'string' } } },
+            },
           },
         ],
         converter,
@@ -354,9 +371,9 @@ describe('assembleSpec', () => {
       ];
       const doc = assembleSpec(routes, converter, { info: baseInfo });
       expect(doc.components?.schemas).toBeUndefined();
-      expect(doc.paths['/ref-test']?.get?.responses['200']?.content?.['application/json']?.schema?.$ref).toBe(
-        '#/components/schemas/Existing',
-      );
+      expect(
+        doc.paths['/ref-test']?.get?.responses['200']?.content?.['application/json']?.schema?.$ref,
+      ).toBe('#/components/schemas/Existing');
     });
   });
 });

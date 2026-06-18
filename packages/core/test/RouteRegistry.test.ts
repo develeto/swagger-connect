@@ -71,9 +71,9 @@ describe('RouteRegistry', () => {
 
     it('throws when responses is empty', () => {
       const registry = new RouteRegistry();
-      expect(() =>
-        registry.register({ method: 'GET', path: '/users', responses: {} }),
-      ).toThrow(OpenApiValidationError);
+      expect(() => registry.register({ method: 'GET', path: '/users', responses: {} })).toThrow(
+        OpenApiValidationError,
+      );
     });
 
     it('includes the invalid field in the error', () => {

@@ -4,7 +4,6 @@ import { describe, it, expect } from 'vitest';
 
 import { JoiSchemaAdapter } from '../src/JoiSchemaAdapter.js';
 
-
 const adapter = new JoiSchemaAdapter();
 
 describe('JoiSchemaAdapter', () => {

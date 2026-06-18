@@ -70,9 +70,7 @@ describe('ZodSchemaAdapter', () => {
 
   describe('convert — complex types', () => {
     it('converts z.object()', () => {
-      const result = adapter.convert(
-        z.object({ name: z.string(), age: z.number() }),
-      );
+      const result = adapter.convert(z.object({ name: z.string(), age: z.number() }));
       expect(result.type).toBe('object');
       expect(result.properties?.['name']).toEqual({ type: 'string' });
       expect(result.properties?.['age']).toEqual({ type: 'number' });
@@ -98,9 +96,7 @@ describe('ZodSchemaAdapter', () => {
     });
 
     it('converts z.optional() field inside object', () => {
-      const result = adapter.convert(
-        z.object({ name: z.string(), bio: z.string().optional() }),
-      );
+      const result = adapter.convert(z.object({ name: z.string(), bio: z.string().optional() }));
       expect(result.required).toContain('name');
       expect(result.required).not.toContain('bio');
     });

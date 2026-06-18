@@ -33,10 +33,7 @@ export class JoiSchemaAdapter implements ISchemaAdapter {
 
   convert(schema: AnySchema): SchemaObject {
     if (!this.canHandle(schema)) {
-      throw new OpenApiAdapterError(
-        'JoiSchemaAdapter received a non-Joi schema.',
-        this.name,
-      );
+      throw new OpenApiAdapterError('JoiSchemaAdapter received a non-Joi schema.', this.name);
     }
 
     try {
@@ -62,15 +59,33 @@ export class JoiSchemaAdapter implements ISchemaAdapter {
         if (rules) {
           for (const rule of rules) {
             switch (rule.name) {
-              case 'min': result.minLength = rule.args?.limit as number; break;
-              case 'max': result.maxLength = rule.args?.limit as number; break;
-              case 'pattern': result.pattern = rule.args?.regex?.toString() ?? rule.args?.pattern as string; break;
-              case 'email': result.format = 'email'; break;
-              case 'uri': result.format = 'uri'; break;
-              case 'uuid': result.format = 'uuid'; break;
-              case 'guid': result.format = 'uuid'; break;
-              case 'isoDate': result.format = 'date-time'; break;
-              case 'length': result.minLength = result.maxLength = rule.args?.limit as number; break;
+              case 'min':
+                result.minLength = rule.args?.limit as number;
+                break;
+              case 'max':
+                result.maxLength = rule.args?.limit as number;
+                break;
+              case 'pattern':
+                result.pattern = rule.args?.regex?.toString() ?? (rule.args?.pattern as string);
+                break;
+              case 'email':
+                result.format = 'email';
+                break;
+              case 'uri':
+                result.format = 'uri';
+                break;
+              case 'uuid':
+                result.format = 'uuid';
+                break;
+              case 'guid':
+                result.format = 'uuid';
+                break;
+              case 'isoDate':
+                result.format = 'date-time';
+                break;
+              case 'length':
+                result.minLength = result.maxLength = rule.args?.limit as number;
+                break;
             }
           }
         }
@@ -82,12 +97,26 @@ export class JoiSchemaAdapter implements ISchemaAdapter {
         if (rules) {
           for (const rule of rules) {
             switch (rule.name) {
-              case 'min': result.minimum = rule.args?.limit as number; break;
-              case 'max': result.maximum = rule.args?.limit as number; break;
-              case 'integer': result.type = 'integer'; break;
-              case 'multiple': result.multipleOf = rule.args?.base as number; break;
-              case 'positive': result.minimum = 0; result.exclusiveMinimum = true; break;
-              case 'negative': result.maximum = 0; result.exclusiveMaximum = true; break;
+              case 'min':
+                result.minimum = rule.args?.limit as number;
+                break;
+              case 'max':
+                result.maximum = rule.args?.limit as number;
+                break;
+              case 'integer':
+                result.type = 'integer';
+                break;
+              case 'multiple':
+                result.multipleOf = rule.args?.base as number;
+                break;
+              case 'positive':
+                result.minimum = 0;
+                result.exclusiveMinimum = true;
+                break;
+              case 'negative':
+                result.maximum = 0;
+                result.exclusiveMaximum = true;
+                break;
               case 'sign': {
                 const sign = rule.args?.sign as string;
                 if (sign === 'positive') {
@@ -140,16 +169,28 @@ export class JoiSchemaAdapter implements ISchemaAdapter {
           if (items.length === 1 && items[0] !== undefined) {
             result.items = this.convertDescription(items[0]);
           } else {
-            result.items = { anyOf: items.filter((i): i is JoiDescription => i !== undefined).map((i) => this.convertDescription(i)) };
+            result.items = {
+              anyOf: items
+                .filter((i): i is JoiDescription => i !== undefined)
+                .map((i) => this.convertDescription(i)),
+            };
           }
         }
         if (rules) {
           for (const rule of rules) {
             switch (rule.name) {
-              case 'min': result.minItems = rule.args?.limit as number; break;
-              case 'max': result.maxItems = rule.args?.limit as number; break;
-              case 'unique': result.uniqueItems = true; break;
-              case 'length': result.minItems = result.maxItems = rule.args?.limit as number; break;
+              case 'min':
+                result.minItems = rule.args?.limit as number;
+                break;
+              case 'max':
+                result.maxItems = rule.args?.limit as number;
+                break;
+              case 'unique':
+                result.uniqueItems = true;
+                break;
+              case 'length':
+                result.minItems = result.maxItems = rule.args?.limit as number;
+                break;
             }
           }
         }

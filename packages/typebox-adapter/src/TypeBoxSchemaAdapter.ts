@@ -3,13 +3,37 @@ import { OpenApiAdapterError } from '@swagger-connect/core';
 import type { ISchemaAdapter, AnySchema, SchemaObject } from '@swagger-connect/core';
 
 const ALLOWED_KEYS = new Set([
-  'type', 'title', 'description', 'format', 'default', 'example',
-  'enum', 'const', 'nullable',
-  'minLength', 'maxLength', 'pattern',
-  'minimum', 'maximum', 'exclusiveMinimum', 'exclusiveMaximum', 'multipleOf',
-  'items', 'minItems', 'maxItems', 'uniqueItems',
-  'properties', 'required', 'additionalProperties', 'patternProperties', 'minProperties', 'maxProperties',
-  'allOf', 'anyOf', 'oneOf', 'not',
+  'type',
+  'title',
+  'description',
+  'format',
+  'default',
+  'example',
+  'enum',
+  'const',
+  'nullable',
+  'minLength',
+  'maxLength',
+  'pattern',
+  'minimum',
+  'maximum',
+  'exclusiveMinimum',
+  'exclusiveMaximum',
+  'multipleOf',
+  'items',
+  'minItems',
+  'maxItems',
+  'uniqueItems',
+  'properties',
+  'required',
+  'additionalProperties',
+  'patternProperties',
+  'minProperties',
+  'maxProperties',
+  'allOf',
+  'anyOf',
+  'oneOf',
+  'not',
   '$ref',
 ]);
 
@@ -63,26 +87,15 @@ export class TypeBoxSchemaAdapter implements ISchemaAdapter {
             this.normalize(v as Record<string, unknown>),
           ]),
         );
-      } else if (
-        (key === 'allOf' || key === 'anyOf' || key === 'oneOf') &&
-        Array.isArray(value)
-      ) {
+      } else if ((key === 'allOf' || key === 'anyOf' || key === 'oneOf') && Array.isArray(value)) {
         result[key] = value.map((v: Record<string, unknown>) => this.normalize(v));
       } else if (key === 'items' && typeof value === 'object' && value !== null) {
         result[key] = this.normalize(value as Record<string, unknown>);
       } else if (key === 'not' && typeof value === 'object' && value !== null) {
         result[key] = this.normalize(value as Record<string, unknown>);
-      } else if (
-        key === 'additionalProperties' &&
-        typeof value === 'object' &&
-        value !== null
-      ) {
+      } else if (key === 'additionalProperties' && typeof value === 'object' && value !== null) {
         result[key] = this.normalize(value as Record<string, unknown>);
-      } else if (
-        key === 'patternProperties' &&
-        typeof value === 'object' &&
-        value !== null
-      ) {
+      } else if (key === 'patternProperties' && typeof value === 'object' && value !== null) {
         result[key] = Object.fromEntries(
           Object.entries(value as Record<string, unknown>).map(([k, v]) => [
             k,

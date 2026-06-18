@@ -165,7 +165,10 @@ function extractNamedComponents(doc: OpenApiDocument): void {
     if (schema.items !== undefined) {
       extract(schema.items);
     }
-    if (schema.additionalProperties !== undefined && typeof schema.additionalProperties === 'object') {
+    if (
+      schema.additionalProperties !== undefined &&
+      typeof schema.additionalProperties === 'object'
+    ) {
       extract(schema.additionalProperties);
     }
     for (const key of ['allOf', 'anyOf', 'oneOf'] as const) {

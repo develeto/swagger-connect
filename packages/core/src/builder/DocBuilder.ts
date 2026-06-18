@@ -14,7 +14,6 @@ import type { RouteDefinition } from './RouteRegistry.js';
 import { SchemaConverter } from './SchemaConverter.js';
 import { assembleSpec } from './SpecAssembler.js';
 
-
 export interface DocBuilderOptions {
   info: InfoObject;
   /** Primary schema adapter. Additional adapters can be registered via `addAdapter()`. */
@@ -112,7 +111,9 @@ export class DocBuilder {
    */
   async toYAML(): Promise<string> {
     // Dynamic import keeps js-yaml as a true optional peer dep
-    const { dump } = await import('js-yaml' as AnySchema as string) as { dump: (obj: unknown) => string };
+    const { dump } = (await import('js-yaml' as AnySchema as string)) as {
+      dump: (obj: unknown) => string;
+    };
     return dump(this.build());
   }
 }
