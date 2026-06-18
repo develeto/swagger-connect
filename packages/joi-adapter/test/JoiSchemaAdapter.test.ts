@@ -52,6 +52,22 @@ describe('JoiSchemaAdapter', () => {
     expect(result.format).toBe('uuid');
   });
 
+  it('converts Joi.string().guid()', () => {
+    const result = adapter.convert(Joi.string().guid());
+    expect(result.format).toBe('uuid');
+  });
+
+  it('converts Joi.string().isoDate()', () => {
+    const result = adapter.convert(Joi.string().isoDate());
+    expect(result.format).toBe('date-time');
+  });
+
+  it('converts Joi.string().length(10)', () => {
+    const result = adapter.convert(Joi.string().length(10));
+    expect(result.minLength).toBe(10);
+    expect(result.maxLength).toBe(10);
+  });
+
   it('converts Joi.number()', () => {
     const result = adapter.convert(Joi.number());
     expect(result).toEqual({ type: 'number' });
@@ -100,6 +116,24 @@ describe('JoiSchemaAdapter', () => {
     expect(result.maxItems).toBe(10);
   });
 
+  it('converts Joi.array().unique().length(5)', () => {
+    const result = adapter.convert(Joi.array().items(Joi.string()).unique().length(5));
+    expect(result.uniqueItems).toBe(true);
+    expect(result.minItems).toBe(5);
+    expect(result.maxItems).toBe(5);
+  });
+
+  it('converts Joi.number().multiple(3)', () => {
+    const result = adapter.convert(Joi.number().multiple(3));
+    expect(result.multipleOf).toBe(3);
+  });
+
+  it('converts Joi.number().negative()', () => {
+    const result = adapter.convert(Joi.number().negative());
+    expect(result.exclusiveMaximum).toBe(true);
+    expect(result.maximum).toBe(0);
+  });
+
   it('converts Joi.alternatives() (union)', () => {
     const result = adapter.convert(Joi.alternatives().try(Joi.string(), Joi.number()));
     expect(result.anyOf).toBeDefined();
@@ -109,6 +143,14 @@ describe('JoiSchemaAdapter', () => {
   it('converts Joi.any()', () => {
     const result = adapter.convert(Joi.any());
     expect(result).toEqual({});
+  });
+
+  it('throws OpenApiAdapterError for unsupported Joi type', () => {
+    const fakeSchema = {
+      isJoi: true,
+      describe: () => ({ type: 'binary' }),
+    };
+    expect(() => adapter.convert(fakeSchema)).toThrow(OpenApiAdapterError);
   });
 
   it('handles nullable with allow(null)', () => {
